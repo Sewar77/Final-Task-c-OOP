@@ -1,0 +1,135 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ConsoleApp2
+{
+    public class City
+    {
+        public string Name { get; set; }
+        public string Region { get; set; }
+        public List<School> Schools { get; set; }
+    }
+
+    public class School
+    {
+        public string Name { get; set; }
+        public string Space { get; set; }
+        public List<Teacher> Teachers { get; set; }
+    }
+
+    public class Teacher
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
+    }
+
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            var cities = CreateSampleData();
+            DisplayOrganizedData(cities);
+            DisplaySchoolWithMostTeachers(cities);
+        }
+
+        public static List<City> CreateSampleData()
+        {
+            return new List<City>
+            {
+                new City
+                {
+                    Name = "Amman",
+                    Region = "Central",
+                    Schools = new List<School>
+                    {
+                        new School
+                        {
+                            Name = "Modern School",
+                            Space = "Large",
+                            Teachers = new List<Teacher>
+                            {
+                                new Teacher { Name = "Ms. A", Id = 1 },
+                                new Teacher { Name = "Mr. B", Id = 2 }
+                            }
+                        },
+                        new School
+                        {
+                            Name = "Future School",
+                            Space = "Medium",
+                            Teachers = new List<Teacher>
+                            {
+                                new Teacher { Name = "Ms. C", Id = 3 }
+                            }
+                        }
+                    }
+                },
+                new City
+                {
+                    Name = "Irbid",
+                    Region = "North",
+                    Schools = new List<School>
+                    {
+                        new School
+                        {
+                            Name = "Northern School",
+                            Space = "Small",
+                            Teachers = new List<Teacher>
+                            {
+                                new Teacher { Name = "Mr. D", Id = 4 }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        public static void DisplayOrganizedData(List<City> cities)
+        {
+            var groupedData = cities.Select(city => new
+            {
+                CityName = city.Name,
+                Region = city.Region,
+                Schools = city.Schools.Select(school => new
+                {
+                    SchoolName = school.Name,
+                    Space = school.Space,
+                    Teachers = school.Teachers.Select(teacher => new
+                    {
+                        TeacherName = teacher.Name,
+                        TeacherId = teacher.Id
+                    })
+                })
+            });
+
+            foreach (var city in groupedData)
+            {
+                Console.WriteLine($"City: {city.CityName}, Region: {city.Region}");
+                foreach (var school in city.Schools)
+                {
+                    Console.WriteLine($"\tSchool: {school.SchoolName}, Space: {school.Space}");
+                    foreach (var teacher in school.Teachers)
+                    {
+                        Console.WriteLine($"\t\tTeacher: {teacher.TeacherName}, ID: {teacher.TeacherId}");
+                    }
+                }
+            }
+        }
+
+        public static void DisplaySchoolWithMostTeachers(List<City> cities)
+        {
+            var schoolWithMostTeachers = cities
+                .SelectMany(city => city.Schools)
+                .OrderByDescending(school => school.Teachers.Count)
+                .FirstOrDefault();
+
+            if (schoolWithMostTeachers != null)
+            {
+                Console.WriteLine("\nSchool with the Most Teachers:");
+                Console.WriteLine($"Name: {schoolWithMostTeachers.Name}");
+                Console.WriteLine($"Space: {schoolWithMostTeachers.Space}");
+                Console.WriteLine($"Teachers: {schoolWithMostTeachers.Teachers.Count}");
+            }
+        }
+    }
+}
