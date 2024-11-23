@@ -1,0 +1,46 @@
+using System;
+using System.IO;
+using System.Linq;
+
+namespace ConsoleApp2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            string file1 = "document1.txt"; 
+            string file2 = "document2.txt"; 
+
+            try
+            {
+                if (!File.Exists(file1))
+                {
+                    File.WriteAllText(file1, "This is the content of document 1.\n"); 
+                    Console.WriteLine($"{file1} was created with sample content.");
+                }
+
+                if (!File.Exists(file2))
+                {
+                    File.WriteAllText(file2, "This is the content of document 2.\n"); 
+                    Console.WriteLine($"{file2} was created with sample content.");
+                }
+
+                string content1 = File.ReadAllText(file1);
+                File.AppendAllText(file2, content1);
+
+                string content2 = File.ReadAllText(file2);
+
+                int totalWords = content2
+                    .Split(new[] { ' ', '\n', '\r', '\t' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Count();
+
+                Console.WriteLine($"Content from '{file1}' has been appended to '{file2}'.");
+                Console.WriteLine($"Total number of words in '{file2}': {totalWords}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+}
