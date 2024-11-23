@@ -1,0 +1,57 @@
+namespace ConsoleApp2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            mylist<int> list = new mylist<int>();
+            list.addItem(1);
+            list.addItem(2);
+            list.addItem(3);
+            list.addItem(4);
+            list.dispayList();
+            list.getFirstItem();
+            Console.WriteLine();
+            mylist<string> list2 = new mylist<string>();
+            list2.addItem("sewar");
+            list2.addItem("jihad");
+            list2.addItem("awad");
+            list2.addItem("shorman");
+            list2.dispayList();
+            list2.getFirstItem();
+
+        }
+    }
+
+    public class mylist<T>
+    {
+        public List<T> list = new List<T>();
+
+        public void addItem(T item)
+        {
+            list.Add(item);
+            Console.WriteLine("item added sucessfully. ");
+        }
+
+        public void dispayList()
+        {
+                foreach (var item in list)
+                {
+                    Console.Write(item + " ");
+                }
+            Console.WriteLine();
+        }
+
+        public void getFirstItem()
+        {
+            try
+            {
+                Console.WriteLine(list.First());
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("List is Empty. " + ex.Message);
+            }
+        }
+    }
+}
